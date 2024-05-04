@@ -1,7 +1,6 @@
-import React from 'react'
-import { atom } from 'recoil'
+import { atom } from 'recoil';
 
-export const AuthState = atom({
-  key: "AuthState",
-  default: localStorage.getItem("token") || null
-})
+export const authState = atom<string>({
+  key: "authState",
+  default: localStorage.getItem("token") || '',
+});

@@ -1,14 +1,19 @@
-import axios from 'axios'
-import React, { ChangeEvent, FC, FormEvent, useContext, useState } from 'react'
-import { AuthProvider, useAuthContext } from '../../contexts/auth/AuthProvider'
-import { LoginCall } from '../../middleware/login/LoginCall'
+import axios from 'axios';
+import React, { ChangeEvent, FC, FormEvent, useContext, useState } from 'react';
+import { AuthProvider, useAuthContext } from '../../contexts/auth/AuthProvider';
+import { LoginCall } from '../../middleware/login/LoginCall';
+import { useRecoilState } from 'recoil';
+import { tokenState } from '../../states/TokenState';
+import { authrecoilLoginCall } from '../../api/auth/AuthRecoilToken';
 
-type UserInput = {
-  email: string
-  password: string
-}
+export type UserInput = {
+  email: string;
+  password: string;
+};
 
 export const Login: FC = () => {
+  const [tokenRecoil, setTokenRecoil] = useRecoilState(tokenState);
+
   const [inputValue, setInputValue] = useState<UserInput>({
     email: "",
     password: ""
@@ -20,19 +25,21 @@ export const Login: FC = () => {
     setInputValue({
       ...inputValue,
       [event.target.name]: event.target.value
-    })
-  }
+    });
+  };
 
   const inputFormHandller = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    LoginCall<UserInput>(inputValue, dispatch)
+    // LoginCall<UserInput>(inputValue, dispatch)
+
+    authrecoilLoginCall(inputValue, setTokenRecoil);
 
     setInputValue({
       email: "",
       password: ""
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -52,7 +59,7 @@ export const Login: FC = () => {
         </form>
       </div>
     </>
-  )
+  );
 }
 
 
